@@ -2,7 +2,7 @@ import useSystem from "../hooks/useSystem";
 import DogCard from "./dogcard";
 
 const LikedDogs = () => {
-    const { likedDogs, toggleLiked } = useSystem(); // Assuming useSystem provides likedDogs
+    const { likedDogs, toggleLiked } = useSystem();
 
     return (
         <div className="content">
