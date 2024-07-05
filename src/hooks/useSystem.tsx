@@ -37,37 +37,23 @@ const useSystem = () => {
             handleError(error as AxiosError<ErrorType>);
         }
     };
-
+    
     const getDogs = async (pageNumber: number): Promise<DogsResponse> => {
         try {
             const response = await axiosInstance.get<DogsResponse>(`${BASE_URL}/dogs?page=${pageNumber}`);
-            return response.data;
+            console.log(response)
+            setDogs((prevDogs) => {
+                const newDogsMap = new Map(prevDogs.map(dog => [dog.id, dog]));
+                response.data.forEach(dog => newDogsMap.set(dog.id, dog));
+                return Array.from(newDogsMap.values());
+            });
+            return dogs
         } catch (error) {
             handleError(error as AxiosError<ErrorType>);
             throw error;
         }
     };
-
-    useEffect(() => {
-        const fetchDogs = async () => {
-            setLoading(true);
-            try {
-                const response = await getDogs(page);
-                setDogs((prevDogs) => {
-                    const newDogsMap = new Map(prevDogs.map(dog => [dog.id, dog]));
-                    response.forEach(dog => newDogsMap.set(dog.id, dog));
-                    return Array.from(newDogsMap.values());
-                });
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDogs();
-    }, [page]);
-
+    useEffect(() => {getDogs(page)}, [page])
     useEffect(() => {
         const handleScroll = () => {
             const windowHeight = window.innerHeight;
@@ -85,7 +71,7 @@ const useSystem = () => {
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
-
+    console.log(dogs)
     return {
         error,
         getDogs,

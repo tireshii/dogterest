@@ -1,17 +1,33 @@
-import React from "react";
-import { DogCardProps } from "../resources/types";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { DogCardProps } from '../resources/types';
 
-const DogCard: React.FC<DogCardProps> = ({ dog, toggleLiked, likedDogs }) => {
+const DogCard = ({ dog, toggleLiked, likedDogs }: DogCardProps) => {
     const isLiked = likedDogs.some(d => d.id === dog.id);
-
+    const handleToggleLike = () => {
+        toggleLiked(dog);
+    };
+    const isVideo = dog.link.endsWith('.mp4');
     return (
-        <div className="dog-card">
-            <img src={dog.link} alt={`Dog ${dog.id}`} className="dog-image" />
-            <p className="dog-likes">Likes: {dog.likes}</p>
-            <button onClick={() => toggleLiked(dog)} className="like-button">
-                {isLiked ? "Unlike" : "Like"}
-            </button>
-        </div>
+        <Card className="dog-card" sx={{ maxWidth: 345 }}>
+            {isVideo ? <video src={dog.link} autoPlay loop muted></video> : <img src={dog.link} alt={`Dog ${dog.id}`}></img>}
+            <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                    {dog.name}
+                </Typography>
+                <IconButton
+                    aria-label="toggle-like"
+                    onClick={handleToggleLike}
+                    sx={{ color: isLiked ? 'red' : 'gray' }}
+                >
+                    <FavoriteIcon />
+                </IconButton>
+            </CardContent>
+        </Card>
     );
 };
-export default DogCard
+
+export default DogCard;
